@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from datetime import datetime
+import random
 import os
 from dotenv import load_dotenv
 
@@ -15,6 +17,9 @@ client.remove_command("help")
 async def on_ready():
     print("The Bot is Ready")
 
+
+# Commands which haven't worked in Cogs!
+# None are here
 
 
 for filename in os.listdir('./cogs'):
