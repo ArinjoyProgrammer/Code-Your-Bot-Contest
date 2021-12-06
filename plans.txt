@@ -1,5 +1,0 @@
-1. Chat Commands - Done
-2. Fun Commands - Done
-3. Special Commands - Done
-4. Moderation Commands - Done
-5. Economy System - Will be done
