@@ -15,11 +15,13 @@ client.remove_command("help")
 
 @client.event
 async def on_ready():
+    await client.change_presence(status=discord.Status.online, activity=discord.Game('p>help'))
     print("The Bot is Ready")
 
 
 # Commands which haven't worked in Cogs!
 # None are here
+
 
 
 for filename in os.listdir('./cogs'):
