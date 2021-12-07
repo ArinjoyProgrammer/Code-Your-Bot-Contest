@@ -56,7 +56,7 @@ class FunCommands(commands.Cog):
 
 
     @commands.command()
-    async def hack(ctx, member : discord.Member):
+    async def hack(self, ctx, member : discord.Member):
 
         random_password = ['36b29c', 'kt764a', '45cvv76', 'fh90;ll', 'gda889', 'kla789', 'kkk89q', 'ff89f52', '95632lrt']
 

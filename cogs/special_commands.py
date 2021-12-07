@@ -3,6 +3,8 @@ from discord.ext import commands
 from datetime import datetime
 import time
 import asyncio
+from PIL import Image
+from io import BytesIO
 import os
 
 
@@ -30,14 +32,13 @@ class SpecialCommands(commands.Cog):
         embed.add_field(name="Server Name", value=server_name, inline=True)
         embed.add_field(name="Server ID", value=id, inline=True)
         embed.add_field(name="Channels: ", value=len(
-        ctx.message.guild.channels), inline=True)
+            ctx.message.guild.channels), inline=True)
         embed.add_field(name="Country", value=region, inline=True)
         embed.add_field(name="Member Count", value=memberCount, inline=True)
         embed.add_field(name="Requested By: ", value=str(
-        ctx.message.author.mention), inline=False)
+            ctx.message.author.mention), inline=False)
 
         await ctx.send(embed=embed)
-
 
     @commands.command()
     async def whois(self, ctx, user: discord.Member = None):
@@ -78,7 +79,6 @@ class SpecialCommands(commands.Cog):
 
         await ctx.send(embed=embed)
 
-
     @commands.command()
     async def joined(self, ctx, *, member: discord.Member):
         joined_at = member.joined_at
@@ -86,16 +86,81 @@ class SpecialCommands(commands.Cog):
 
         await ctx.send(f"**{member}** joined on **{time_joined}**")
 
-
     @commands.command()
     async def membercount(self, ctx):
         embed = discord.Embed(
-            title = "Members",
-            description = f"{ctx.guild.member_count}",
-            timestamp = datetime.now(),
-            color = ctx.author.color
+            title="Members",
+            description=f"{ctx.guild.member_count}",
+            timestamp=datetime.now(),
+            color=ctx.author.color
         )
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=['announce'])
+    async def announcement(self, ctx, *, msg):
+        await ctx.message.delete()
+        await ctx.send(f"{msg}")
+
+
+    @commands.command(case_insensitive=True, aliases=["remind", "remindme", "remind_me"])
+    @commands.bot_has_permissions(attach_files=True, embed_links=True)
+    async def reminder(self, ctx, time, *, reminder):
+        print(time)
+        print(reminder)
+        user = ctx.message.author
+        embed = discord.Embed(color=0x55a7f7, timestamp=datetime.utcnow())
+        embed.set_footer(text="If you have any questions, suggestions or bug reports, please join our support Discord Server: link hidden")
+        seconds = 0
+        if reminder is None:
+            # Error message
+            embed.add_field(
+                name='Warning', value='Please specify what do you want me to remind you about.')
+        if time.lower().endswith("d"):
+            seconds += int(time[:-1]) * 60 * 60 * 24
+        counter = f"{seconds // 60 // 60 // 24} days"
+        if time.lower().endswith("h"):
+            seconds += int(time[:-1]) * 60 * 60
+            counter = f"{seconds // 60 // 60} hours"
+        elif time.lower().endswith("m"):
+            seconds += int(time[:-1]) * 60
+            counter = f"{seconds // 60} minutes"
+        elif time.lower().endswith("s"):
+            seconds += int(time[:-1])
+        counter = f"{seconds} seconds"
+        if seconds == 0:
+            embed.add_field(name='Warning',
+                        value='Please specify a proper duration, send `reminder_help` for more information.')
+        elif seconds < 300:
+            embed.add_field(name='Warning',
+                        value='You have specified a too short duration!\nMinimum duration is 5 minutes.')
+        elif seconds > 7776000:
+            embed.add_field(
+            name='Warning', value='You have specified a too long duration!\nMaximum duration is 90 days.')
+        else:
+            await ctx.send(f"Alright, I will remind you about {reminder} in {counter}.")
+            await asyncio.sleep(seconds)
+            await ctx.send(f"Hi, you asked me to remind you about {reminder} {counter} ago.")
+            return
+        await ctx.send(embed=embed)
+
+
+    @commands.command()
+    async def rip(self, ctx, user: discord.Member = None):
+        if user == None:
+            user = ctx.author
+
+        wanted = Image.open('rip.jpg')
+        asset = user.avatar_url_as(size=128)
+        data = BytesIO(await asset.read())
+        pfp = Image.open(data)
+
+        pfp = pfp.resize((179, 125))
+
+        wanted.paste(pfp, (228, 206))
+
+        wanted.save("profile.jpg")
+
+        await ctx.send(file = discord.File("profile.jpg"))
 
 
 def setup(client):

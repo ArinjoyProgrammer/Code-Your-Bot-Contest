@@ -89,7 +89,7 @@ class ModerationCommands(commands.Cog):
     async def report(self, ctx, member: discord.Member, *, report="No **Report Message** was given!"):
         embed = discord.Embed(
             title = "Report!",
-            description = "{member.mention} You have been **Reported** from {ctx.guild.name}  |  Reason: {report}",
+            description = f"{member.mention} You have been **Reported** from {ctx.guild.name}  |  Reason: {report}",
             timestamp = datetime.now(),
             color = discord.Color.red()
         )
@@ -97,7 +97,7 @@ class ModerationCommands(commands.Cog):
 
         embed = discord.Embed(
             title = "Report!",
-            description = "{member.mention} You have been **Reported** from {ctx.guild.name}  |  Reason: {report}",
+            description = f"{member.mention} You have been **Reported** from {ctx.guild.name}  |  Reason: {report}",
             timestamp = datetime.now(),
             color = discord.Color.red()
         )
