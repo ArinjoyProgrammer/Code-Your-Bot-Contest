@@ -1,10 +1,9 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands.converter import GuildConverter
-from discord.ext.commands.core import command
+from discord_components.dpy_overrides import send_message
 
 
-class MessageContentCommand(commands.Cog):
+class MessageContentCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -12,10 +11,13 @@ class MessageContentCommand(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.content.startswith("Perfectz"):
-            await message.channel.send("My Prefixes are in this server are ``>``")
 
+        msg = message.content
 
+        if msg.startswith("hyper"):
+            await message.channel.send("Hello my name is ``hyper Bot`` and my prefix in this server is ``p. and P.``")
+    
 
+    
 def setup(client):
-    client.add_cog(MessageContentCommand(client))
+    client.add_cog(MessageContentCommands(client))
